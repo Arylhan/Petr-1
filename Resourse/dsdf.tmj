@@ -1,0 +1,214 @@
+class lvl2(ar.View):
+
+
+
+    def __init__(self):
+        super().__init__()
+        self.player = None
+        self.view_left = 0 
+        self.view_bottom = 0
+        self.hp = None
+        self.score = None
+
+
+
+
+
+
+    def setup(self):
+        ar.set_background_color(ar.color.WHITE)
+        self.hp = 3
+        self.score = 0 
+        self.player = Petya()
+
+    
+        
+
+
+
+
+
+
+
+        
+    def on_draw(self):
+        ar.start_render()
+        fon = ar.load_texture("Resourse\поле.png")
+        ar.draw_texture_rectangle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT,fon)
+        self.player.draw()
+        ar.draw_text(f"здоровье: {self.hp}", self.view_left+50, self.view_bottom+700, ar.color.RED, 40 )
+        ar.draw_text(f"картошка: {self.score}", self.view_left+50, self.view_bottom+650, ar.color.RED_BROWN, 40 )
+ 
+        if self.score >= 10:
+            ar.start_render()
+            fon = ar.load_texture("Resourse\меню.png")
+            ar.draw_texture_rectangle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT, fon)
+     
+        if self.hp <= 0:
+            ar.start_render()
+            fon = ar.load_texture("Resourse\меню.png")
+            ar.draw_texture_rectangle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT, fon)
+        
+
+        
+
+
+    def on_update(self, delta_time):
+        self.player.update()
+
+
+
+
+
+        
+    
+ 
+    
+    # метод управления клавиатурой
+    def on_key_press(self,key,modifiers):
+        if key == ar.key.A:
+            self.player.change_x = -5
+        elif key == ar.key.D:
+            self.player.change_x = 5
+        if key == ar.key.SPACE:
+
+
+   
+            menu_view = Menu2()
+            self.window.show_view(menu_view)
+ 
+            
+      
+            
+   
+
+    # метод для остановки игрока если нет нажатия
+    def on_key_release(self,key,modifiers):
+        if key == ar.key.A:
+            self.player.change_x = 0
+        elif key == ar.key.D:
+            self.player.change_x = 0
+       
+def main():
+    window = ar.Window(WIDTH, HEIGHT, TITLE)
+
+    # Переход в меню 
+    menu_view = Menu2()
+    window.show_view(menu_view)
+
+    ar.run()
+
+main()
+
+
+        if button == ar.MOUSE_BUTTON_LEFT and ar.get_sprites_at_point((x,y), self.start2,):
+            view = Instruction2()
+                self.texture = ar.load_texture("Resourse\шаг  вправо 1.png")
+        self.texture = ar.load_texture("Resourse\шаг влево 1.png")
+
+
+
+
+        if self.change_x <= 0:
+            self.set_texture(2)
+        if self.change_x > 0:
+            self.set_texture(1)
+
+
+        if self.center_x < 0:
+            self.center_x = WIDTH
+
+        if self.center_x > WIDTH:
+            self.center_x = 0
+
+
+
+            
+class Game2(ar.View):
+    def __init__(self):
+        super().__init__()
+        self.player = None
+        self.view_left = 0 
+        self.view_bottom = 0
+        self.hp = None
+        self.orel_list = ar.SpriteList()
+    def setup(self):
+        ar.set_background_color(ar.color.WHITE)
+        self.hp = 1 
+        self.player = Petya()
+
+        for i in range(7):
+            p = orel()
+            self.orel_list.append(p)
+
+    def on_draw(self):
+        ar.start_render()
+        fon = ar.load_texture("Resourse\поле.png")
+        ar.draw_texture_rectangle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT,fon)
+        self.player.draw()
+        ar.draw_text(f"здоровье: {self.hp}", self.view_left+50, self.view_bottom+700, ar.color.RED, 40 )
+        if self.hp <= 0:
+            ar.start_render()
+            fon = ar.load_texture("Resourse\меню.png")
+            ar.draw_texture_rectangle(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT, fon)
+            ar.draw_text("ИГРА НЕ ПРОЙДЕНА", WIDTH/2-200, HEIGHT/2, ar.color.BLUE, 40 )
+            ar.draw_text("нажмите пробел чтобы начать заново", WIDTH/2-200, HEIGHT/2-30, ar.color.GRAY, 15)
+
+    
+        self.orel_list.draw()
+
+    def on_update(self, delta_time):
+        self.player.update()
+        self.orel_list.update()
+
+
+        for orel in self.orel_list:
+            if ar.check_for_collision(self.player, orel):
+                orel.kill()
+                self.hp -= 1
+                g = orel()
+                self.orel_list.append(g)
+
+
+    def on_key_press(self,key,modifiers):
+        if key == ar.key.E:
+            self.player.change_y = 2
+        if key == ar.key.D:
+            self.player.change_x = 5
+        if key == ar.key.SPACE:
+
+            menu_view = Menu2()
+            self.window.show_view(menu_view)
+                  
+    # метод для остановки игрока если нет нажатия
+    def on_key_release(self,key,modifiers):
+        
+
+        if key == ar.key.D:
+            self.player.change_x = 0
+       
+def main():
+    window = ar.Window(WIDTH, HEIGHT, TITLE)
+    menu_view = Menu2()
+    window.show_view(menu_view)
+
+    ar.run()
+main()
+
+
+class orel(ar.Sprite):
+    def __init__(self): 
+       super().__init__()
+       self.scale = 0.5
+       img = ar.load_texture("Resourse\орел.png")
+       self.textures.append(img)
+       img = ar.load_texture("Resourse\орел.png")
+       self.textures.append(img)
+       self.set_texture(ran.randint(0, 1))
+       self.center_x = ran.randint(0, WIDTH)
+       self.center_y = ran.randint(HEIGHT, HEIGHT+250)
+
+       self.change_x = ran.randint(-5, -1)
+
+    def update(self):
+        self.center_y += self.change_y
